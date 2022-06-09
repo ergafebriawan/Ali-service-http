@@ -58,17 +58,23 @@ module.exports = {
         pool.getConnection(function(err, connection){
             if(err) throw err;
             connection.query(query, function(error, results){
-                if(error){
+                if(results[0].total_pengurangan == null){
                     return res.json({
                         success: false,
-                        message: 'gagal menampilkan data..',
-                        data: results
+                        message: 'gagal mengambil data..',
+                        data: [{
+                            total_pengurangan : 0,
+                            avg_pengurangan : 0
+                        }]
                     });
                 }else{
                     return res.json({
                        success: true,
                        message: 'mnampilkan semua data',
-                       data: results
+                       data: [{
+                           total_pengurangan : results[0].total_pengurangan.toFixed(3),
+                           avg_pengurangan : results[0].avg_pengurangan.toFixed(3)
+                       }]
                     });
                 }
             });
