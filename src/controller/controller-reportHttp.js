@@ -13,17 +13,30 @@ module.exports = {
         pool.getConnection(function(err, connection){
             if(err) throw err;
             connection.query(query, function(error, results){
-                if(error){
+                if(results[0] == null){
                     return res.json({
                         success: false,
-                        message: 'gagal menampilkan data..',
-                        data: results
+                        message: 'data masih kosong..',
+                        data:[{
+                            ketinggian:0,
+                            meter:4,
+                            tegangan:0,
+                            gps:0,
+                            status:"deactive"
+                        }]
                     });
                 }else{
+                    const meterr = results[0].ketinggian/5;
                     return res.json({
                        success: true,
                        message: 'mnampilkan semua data dashboard..',
-                       data: results
+                       data: [{
+                        ketinggian:results[0].ketinggian,
+                        meter:meterr.toFixed(0),
+                        tegangan:results[0].tegangan,
+                        gps:results[0].gps,
+                        status:results[0].status
+                       }]
                     });
                 }
             });
